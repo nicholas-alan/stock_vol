@@ -2,6 +2,8 @@ import streamlit as st
 from utils.get_price_data import get_historical_stock_data
 from utils.stock_stats import stock_stats
 from utils.summary_stats import generate_summary_table
+from utils.plot_pink import plot_pink
+from utils.plot_light_blue import plot_light_blue
 import pandas as pd
 import datetime
 
@@ -21,12 +23,8 @@ def go_time(ticker1, ticker2, output_container):
         # Outputs for Ticker 1
         with col_a:
             st.subheader(f"Results for {ticker1_name} ({ticker1})")
-            
-            # Line Chart for Closing Price
-            st.line_chart(data=pd.DataFrame({
-                "Date": ticker1_stats['Date'],
-                "Close": ticker1_stats['Close']
-            }).set_index("Date"))
+            fig1 = plot_function(ticker1_data, x_column='Date', y_column='Close', title=f"{ticker1_name} Prices")
+            st.pyplot(fig1)
 
             # Display DataFrame Head
             stock_one_dataframe = f"**DataFrame of {ticker1_name}**"
@@ -38,11 +36,8 @@ def go_time(ticker1, ticker2, output_container):
             st.subheader(f"Results for {ticker2_name} ({ticker2})")
             
             # Line Chart for Closing Price
-            st.line_chart(data=pd.DataFrame({
-                "Date": ticker2_stats['Date'],
-                "Close": ticker2_stats['Close']
-            }).set_index("Date"))
-
+            fig2 = plot_function(ticker2_data, x_column='Date', y_column='Close', title=f"{ticker2_name} Prices")
+            st.pyplot(fig2)
             # Display DataFrame Head
             stock_two_dataframe = f"**DataFrame of {ticker2_name}**"
             st.write(stock_two_dataframe)  
@@ -84,6 +79,7 @@ with input_container:
 
     # GO button in the center column
     with col2:
+        use_pink_theme = st.checkbox("Use Pink Theme", value=True, key="color_scheme_toggle")
         # Inject CSS to center the button
         st.markdown("""
             <style>
@@ -98,6 +94,7 @@ with input_container:
 
         st.markdown('<div class="center-button">', unsafe_allow_html=True)
         if st.button("GO", use_container_width=True):
+            plot_function = plot_pink if use_pink_theme else plot_light_blue
             # Trigger go_time and pass the output_container for results
             go_time(ticker1, ticker2, output_container)
         st.markdown('</div>', unsafe_allow_html=True)
