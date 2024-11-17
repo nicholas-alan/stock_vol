@@ -17,21 +17,18 @@ def generate_summary_table(bottom_row1, bottom_row2, stock1_name, stock2_name):
         "Statistic": [
             "Avg. Daily Return",
             "Standard Deviation (Return)",
-            "Daily Volatility",
-            "Avg. Volatility",
+            "Avg. Daily Volatility",
             "Standard Deviation (Volatility)"
         ],
         stock1_name: [
             bottom_row1['Running Avg Return'],
             bottom_row1['Running Std Dev'],
-            bottom_row1['Daily Volatility'],
             bottom_row1['Running Avg Volatility'],
             bottom_row1['Running Std Dev Volatility']
         ],
         stock2_name: [
             bottom_row2['Running Avg Return'],
             bottom_row2['Running Std Dev'],
-            bottom_row2['Daily Volatility'],
             bottom_row2['Running Avg Volatility'],
             bottom_row2['Running Std Dev Volatility']
         ]
