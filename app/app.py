@@ -29,7 +29,7 @@ def go_time(ticker1, ticker2, output_container):
             # Display DataFrame Head
             stock_one_dataframe = f"**DataFrame of {ticker1_name}**"
             st.write(stock_one_dataframe)
-            st.write(ticker1_stats.head())
+            st.write(ticker1_stats)
 
         # Outputs for Ticker 2
         with col_b:
@@ -41,7 +41,7 @@ def go_time(ticker1, ticker2, output_container):
             # Display DataFrame Head
             stock_two_dataframe = f"**DataFrame of {ticker2_name}**"
             st.write(stock_two_dataframe)  
-            st.write(ticker2_stats.head())
+            st.write(ticker2_stats)
 
     with tables_container:
 

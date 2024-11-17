@@ -37,7 +37,7 @@ def get_historical_stock_data(ticker_symbol, start_date=None, end_date=None):
     # Format the data
     historical_data.reset_index(inplace=True)
     historical_data = historical_data[['Date', 'Open', 'High', 'Low', 'Close', 'Volume']]
-    stock_data['Date'] = stock_data['Date'].dt.strftime('%Y-%m-%d')
+    historical_data['Date'] = historical_data['Date'].dt.strftime('%Y-%m-%d')
 
     return ticker_name, historical_data
 
