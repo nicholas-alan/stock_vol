@@ -1,7 +1,9 @@
 import streamlit as st
 from utils.get_price_data import get_historical_stock_data
 from utils.stock_stats import stock_stats
+from utils.summary_stats import generate_summary_table
 import pandas as pd
+
 
 # Function to process and display results
 def go_time(ticker1, ticker2, output_container):
@@ -15,7 +17,7 @@ def go_time(ticker1, ticker2, output_container):
         ticker2_stats = stock_stats(ticker2_data)
 
         # Create a 2-column layout for the outputs
-        col_a, col_b = st.columns(2)
+        col_a, col_b, col_c = st.columns(3)
 
         # Outputs for Ticker 1
         with col_a:
@@ -27,21 +29,12 @@ def go_time(ticker1, ticker2, output_container):
                 "Close": ticker1_stats['Close']
             }).set_index("Date"))
 
-            # Display final statistics
-            st.write("**Final Statistics:**")
-            st.write(f"Total Daily Return: {ticker1_stats['Daily Return'].sum():.2f}%")
-            st.write(f"Running Avg Return: {ticker1_stats['Running Avg Return'].iloc[-1]:.2f}%")
-            st.write(f"Running Std Dev: {ticker1_stats['Running Std Dev'].iloc[-1]:.2f}%")
-            st.write(f"Daily Volatility: {ticker1_stats['Daily Volatility'].iloc[-1]:.2f}%")
-            st.write(f"Running Avg Volatility: {ticker1_stats['Running Avg Volatility'].iloc[-1]:.2f}%")
-            st.write(f"Running Std Dev Volatility: {ticker1_stats['Running Std Dev Volatility'].iloc[-1]:.2f}%")
-
             # Display DataFrame Head
             st.write("**DataFrame Head:**")
             st.write(ticker1_stats.head())
 
         # Outputs for Ticker 2
-        with col_b:
+        with col_c:
             st.subheader(f"Results for {ticker2_name} ({ticker2})")
             
             # Line Chart for Closing Price
@@ -50,18 +43,18 @@ def go_time(ticker1, ticker2, output_container):
                 "Close": ticker2_stats['Close']
             }).set_index("Date"))
 
-            # Display final statistics
-            st.write("**Final Statistics:**")
-            st.write(f"Total Daily Return: {ticker2_stats['Daily Return'].sum():.2f}%")
-            st.write(f"Running Avg Return: {ticker2_stats['Running Avg Return'].iloc[-1]:.2f}%")
-            st.write(f"Running Std Dev: {ticker2_stats['Running Std Dev'].iloc[-1]:.2f}%")
-            st.write(f"Daily Volatility: {ticker2_stats['Daily Volatility'].iloc[-1]:.2f}%")
-            st.write(f"Running Avg Volatility: {ticker2_stats['Running Avg Volatility'].iloc[-1]:.2f}%")
-            st.write(f"Running Std Dev Volatility: {ticker2_stats['Running Std Dev Volatility'].iloc[-1]:.2f}%")
-
             # Display DataFrame Head
             st.write("**DataFrame Head:**")
             st.write(ticker2_stats.head())
+
+            # Summary Table in the Middle
+            summary_table = generate_summary_table(
+                ticker1_stats.iloc[-1],
+                ticker2_stats.iloc[-1],
+                ticker1_name,
+                ticker2_name
+            )
+            st.table(summary_table)
 
 # Main app layout
 st.title("Stock Comparison App")
