@@ -1,7 +1,7 @@
 import streamlit as st
 from utils.get_price_data import get_historical_stock_data
 from utils.stock_stats import stock_stats
-import matplotlib.pyplot as plt
+import pandas as pd
 
 # Function to process and display results
 def go_time(ticker1, ticker2, output_container):
@@ -21,28 +21,22 @@ def go_time(ticker1, ticker2, output_container):
         # Create new 2-column layout for the results
         col_a, col_b = st.columns(2)
 
-        # Figure for Ticker 1
+        # Chart for Ticker 1
         with col_a:
             st.write(f"Closing Prices for {ticker1_name} ({ticker1})")
-            plt.figure(figsize=(5, 4))
-            plt.plot(ticker1_data['Date'], ticker1_data['Close'], label=f"{ticker1_name} (Close)", color="blue")
-            plt.xlabel("Date")
-            plt.ylabel("Closing Price (USD)")
-            plt.title(f"{ticker1_name} Closing Prices")
-            plt.legend()
-            st.pyplot(plt)
+            st.line_chart(data=pd.DataFrame({
+                "Date": ticker1_data['Date'],
+                "Close": ticker1_data['Close']
+            }).set_index("Date"))
             st.write(f"**Average Daily Return for {ticker1_name} ({ticker1}):** {avg_daily_return_ticker1:.2f}%")
 
-        # Figure for Ticker 2
+        # Chart for Ticker 2
         with col_b:
             st.write(f"Closing Prices for {ticker2_name} ({ticker2})")
-            plt.figure(figsize=(5, 4))
-            plt.plot(ticker2_data['Date'], ticker2_data['Close'], label=f"{ticker2_name} (Close)", color="green")
-            plt.xlabel("Date")
-            plt.ylabel("Closing Price (USD)")
-            plt.title(f"{ticker2_name} Closing Prices")
-            plt.legend()
-            st.pyplot(plt)
+            st.line_chart(data=pd.DataFrame({
+                "Date": ticker2_data['Date'],
+                "Close": ticker2_data['Close']
+            }).set_index("Date"))
             st.write(f"**Average Daily Return for {ticker2_name} ({ticker2}):** {avg_daily_return_ticker2:.2f}%")
 
 # Main app layout
