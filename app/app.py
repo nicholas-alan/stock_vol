@@ -1,48 +1,9 @@
-import matplotlib.pyplot as plt
 import streamlit as st
 from utils.get_price_data import get_historical_stock_data
 from utils.stock_stats import stock_stats
 from utils.summary_stats import generate_summary_table
 import pandas as pd
 import datetime
-
-def plot_closing_prices(data, stock_name):
-    """
-    Create a Matplotlib plot for the closing prices of a stock.
-
-    Parameters:
-        data (pd.DataFrame): Stock data containing 'Date' and 'Close' columns.
-        stock_name (str): The name of the stock for labeling.
-
-    Returns:
-        Matplotlib figure.
-    """
-    fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(data['Date'], data['Close'], label=f'{stock_name} Closing Prices', color='blue', linewidth=2)
-    ax.set_title(f'{stock_name} Closing Prices Over Time', fontsize=14)
-    ax.set_xlabel('Date', fontsize=12)
-    ax.set_ylabel('Closing Price (USD)', fontsize=12)
-    ax.grid(True, linestyle='--', alpha=0.7)
-    ax.legend(fontsize=10)
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    return fig
-
-# Custom CSS to widen the app
-def widen_app():
-    st.markdown(
-        """
-        <style>
-        /* Adjust the main content width */
-        .main {
-            max-width: 90%; /* Set to 80-90% of the viewport width */
-            margin: 0 auto; /* Center align */
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
 
 # Function to process and display results
 def go_time(ticker1, ticker2, output_container):
@@ -62,12 +23,14 @@ def go_time(ticker1, ticker2, output_container):
             st.subheader(f"Results for {ticker1_name} ({ticker1})")
             
             # Line Chart for Closing Price
+            st.line_chart(data=pd.DataFrame({
                 "Date": ticker1_stats['Date'],
                 "Close": ticker1_stats['Close']
             }).set_index("Date"))
 
             # Display DataFrame Head
-            st.write("**DataFrame Head:**")
+            stock_one_dataframe = f"**DataFrame of {ticker1_name}**"
+            st.write(stock_one_dataframe)
             st.write(ticker1_stats.head())
 
         # Outputs for Ticker 2
@@ -75,16 +38,19 @@ def go_time(ticker1, ticker2, output_container):
             st.subheader(f"Results for {ticker2_name} ({ticker2})")
             
             # Line Chart for Closing Price
+            st.line_chart(data=pd.DataFrame({
                 "Date": ticker2_stats['Date'],
                 "Close": ticker2_stats['Close']
             }).set_index("Date"))
 
             # Display DataFrame Head
-            st.write("**DataFrame Head:**")
+            stock_two_dataframe = f"**DataFrame of {ticker2_name}**"
+            st.write(stock_two_dataframe)  
             st.write(ticker2_stats.head())
 
     with tables_container:
-            # Summary Table 
+
+            # Summary Table in the Middle
             summary_table = generate_summary_table(
                 ticker1_stats.iloc[-1],
                 ticker2_stats.iloc[-1],
@@ -95,7 +61,7 @@ def go_time(ticker1, ticker2, output_container):
 
 # Main app layout
 st.title("Stock Comparison App")
-widen_app()
+
 # First container for inputs
 input_container = st.container()
 output_container = st.container()
